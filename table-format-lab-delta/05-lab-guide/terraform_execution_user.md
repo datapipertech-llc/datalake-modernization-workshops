@@ -82,8 +82,8 @@ PROJECT_ID=`gcloud config list --format "value(core.project)" 2>/dev/null`
 PROJECT_NBR=`gcloud projects describe $PROJECT_ID | grep projectNumber | cut -d':' -f2 |  tr -d "'" | xargs`
 GCP_ACCOUNT_NAME=`gcloud config list account --format "value(core.account)" | cut -d'@' -f1 | xargs`
 SESSION_NAME="delta-lake-lab"
-LOCATION=<Your GCP region here>
-NAME=<Your name here>
+LOCATION="us-central1"
+NAME="stevencontreras"
 HISTORY_SERVER_NAME="dll-sphs-${PROJECT_NBR}"
 METASTORE_NAME="dll-hms-${PROJECT_NBR}"
 SUBNET="dll-snet"
@@ -93,17 +93,18 @@ NOTEBOOK_BUCKET="gs://dll-code-bucket-${PROJECT_NBR}-${NAME}"
 gcloud beta dataproc sessions create spark $NAME-$SESSION_NAME-$RANDOM  \
 --project=${PROJECT_ID} \
 --location=${LOCATION} \
---property=spark.jars.packages="io.delta:delta-core_2.13:2.1.0" \
+--property=spark.jars.packages="io.delta:delta-core_2.13:2.4.0" \
 --history-server-cluster="projects/$PROJECT_ID/regions/$LOCATION/clusters/${HISTORY_SERVER_NAME}" \
 --metastore-service="projects/$PROJECT_ID/locations/$LOCATION/services/${METASTORE_NAME}" \
 --property="spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension" \
 --property="spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog" \
---service-account="s8s-lab-sa@tgs-internal-gcpgtminit-dev-01.iam.gserviceaccount.com" \
---version 2.0.3 \
+--service-account="dll-lab-sa@${PROJECT_ID}.iam.gserviceaccount.com" \
+--version 2.1 \
 --subnet=$SUBNET 
-
-
 ```
+
+
+
 The author typcially has two sessions handly to expedite switching across notebooks.
 
 <hr>
