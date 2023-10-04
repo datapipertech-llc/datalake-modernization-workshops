@@ -32,9 +32,9 @@ PROJECT_NBR=`gcloud projects describe $PROJECT_ID | grep projectNumber | cut -d'
 PROJECT_NAME=`gcloud projects describe ${PROJECT_ID} | grep name | cut -d':' -f2 | xargs`
 GCP_ACCOUNT_NAME=`gcloud auth list --filter=status:ACTIVE --format="value(account)"`
 GCP_MULTI_REGION="US"
-LOCATION=<Your GCP region here>
+LOCATION="us-central1"
 
-
+echo
 echo "PROJECT_ID=$PROJECT_ID"
 echo "PROJECT_NBR=$PROJECT_NBR"
 echo "PROJECT_NAME=$PROJECT_NAME"
@@ -77,13 +77,19 @@ terraform apply \
 ## C. Create a Dataproc Interactive Spark Session
 
 Edit location and name variables as appropriate-
+
+For `NAME`:
+- make sure to remove any `.` characters
+- the value corresponds to the *user_id* portion of your principal id
+- for instance, if your principal id is `steven.contreras@datapipertech.com`, the value would be `NAME="stevencontreras"`.
+
 ```
 PROJECT_ID=`gcloud config list --format "value(core.project)" 2>/dev/null`
 PROJECT_NBR=`gcloud projects describe $PROJECT_ID | grep projectNumber | cut -d':' -f2 |  tr -d "'" | xargs`
 GCP_ACCOUNT_NAME=`gcloud config list account --format "value(core.account)" | cut -d'@' -f1 | xargs`
 SESSION_NAME="delta-lake-lab"
 LOCATION="us-central1"
-NAME="stevencontreras"
+NAME="<your user_id portion of your principal id - see the note above>"
 HISTORY_SERVER_NAME="dll-sphs-${PROJECT_NBR}"
 METASTORE_NAME="dll-hms-${PROJECT_NBR}"
 SUBNET="dll-snet"
